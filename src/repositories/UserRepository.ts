@@ -1,5 +1,12 @@
 import User from '../models/User';
 
+interface CreateUserDTO {
+  login: string;
+  password: string;
+  name: string;
+  email: string;
+}
+
 class UsersRepository {
   private users: User[];
 
@@ -11,13 +18,8 @@ class UsersRepository {
     return this.users;
   }
 
-  public create(
-    login: string,
-    password: string,
-    name: string,
-    email: string,
-  ): User {
-    const user = new User(login, password, name, email);
+  public create({ login, password, name, email }: CreateUserDTO): User {
+    const user = new User({ login, password, name, email });
 
     this.users.push(user);
 

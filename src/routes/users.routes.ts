@@ -13,7 +13,7 @@ usersRouter.get('/', (request, response) => {
 usersRouter.post('/', (request, response) => {
   const { login, password, name, email } = request.body;
 
-  const user = usersRepository.create(login, password, name, email);
+  const user = usersRepository.create({ login, password, name, email });
 
   return response.json(user);
 });

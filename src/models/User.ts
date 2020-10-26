@@ -11,7 +11,7 @@ class User {
 
   email: string;
 
-  constructor(login: string, password: string, name: string, email: string) {
+  constructor({ login, password, name, email }: Omit<User, 'id'>) {
     this.id = uuid();
     this.login = login;
     this.password = password;
