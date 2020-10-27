@@ -1,4 +1,4 @@
-import { getCustomRepository } from 'typeorm';
+import { getRepository } from 'typeorm';
 import { hash } from 'bcryptjs';
 import User from '../models/User';
 import UsersRepository from '../repositories/UserRepository';
@@ -17,7 +17,7 @@ class CreateUserService {
     name,
     email,
   }: RequestDTO): Promise<User> {
-    const usersRepository = getCustomRepository(UsersRepository);
+    const usersRepository = getRepository(User);
 
     const checkUserExists = await usersRepository.findOne({
       where: { email },
