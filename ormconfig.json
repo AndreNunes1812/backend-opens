@@ -5,6 +5,7 @@
   "username": "opens",
   "password": "opens",
   "database": "opensdb",
+  "entities": ["./src/models/*.ts"],
   "migrations": [
     "./src/database/migrations/*.ts"
   ],
