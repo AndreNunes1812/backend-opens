@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import { getRepository } from 'typeorm';
+
+import AppError from '../errors/AppError';
 import CreateUserService from '../services/CreateUserService';
 
 import ensureAuthenticated from '../middlewares/ensureAuthenticated';
@@ -39,7 +41,7 @@ usersRouter.put('/:id', async (request, response) => {
   const user = await usersRepository.findOne(id);
 
   if (!user) {
-    throw Error('User not found');
+    throw new AppError('User not found', 401);
   }
 
   usersRepository.merge(user, request.body);
@@ -57,44 +59,36 @@ usersRouter.put('/:id', async (request, response) => {
 });
 
 usersRouter.delete('/:id', async (request, response) => {
-  try {
-    const { id } = request.params;
+  const { id } = request.params;
 
-    const usersRepository = getRepository(User);
+  const usersRepository = getRepository(User);
 
-    const result = await usersRepository.delete(id);
+  const result = await usersRepository.delete(id);
 
-    if (result.affected === 0) {
-      throw Error('User not deleted.');
-    }
-
-    return response.status(202).json({ message: 'User deleted.' });
-  } catch (err) {
-    return response.status(400).json({ error: err.message });
+  if (result.affected === 0) {
+    throw new AppError('User not exists.', 200);
   }
+
+  return response.status(202).json({ message: 'User deleted.' });
 });
 
 usersRouter.post('/', async (request, response) => {
-  try {
-    const { login, password, name, email } = request.body;
+  const { login, password, name, email } = request.body;
 
-    const createUser = new CreateUserService();
+  const createUser = new CreateUserService();
 
-    const user = await createUser.execute({ login, password, name, email });
+  const user = await createUser.execute({ login, password, name, email });
 
-    const userWithoutPassword = {
-      id: user.id,
-      login: user.login,
-      name: user.name,
-      email: user.email,
-      created_at: user.created_at,
-      updated_at: user.updated_at,
-    };
+  const userWithoutPassword = {
+    id: user.id,
+    login: user.login,
+    name: user.name,
+    email: user.email,
+    created_at: user.created_at,
+    updated_at: user.updated_at,
+  };
 
-    return response.json(userWithoutPassword);
-  } catch (err) {
-    return response.status(400).json({ error: err.message });
-  }
+  return response.json(userWithoutPassword);
 });
 
 export default usersRouter;

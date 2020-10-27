@@ -51,20 +51,24 @@
   [DBeaver](https://dbeaver.io/)
 
 
-
-
   #Baixar o projeto?
 
   O Banco de dados foi criado no docker, para a execução do mesmo digite na linha de comando o seguinte:
 
   **sudo docker run --name opens-postgrees -e POSTGRES_PASSWORD=opens -p 5432:5432 -d  postgres**
 
-  onde: opens-postgrees nome do container
+  onde:
+
+        sudo somente em maquinas linux ou macos
+
+        opens-postgrees nome do container
+
         opens é a senha do postgree dentro do container.
 
         comandos docker para verificar se o container está válido.
 
         docker ls -la, mostra todos os container
+
         docker rm container(id)
 
         para demais comando digite docker --help
@@ -98,3 +102,58 @@
   b) digite **yarn dev:service** para executar a **API**.
 
   c) Isomnia  ferramenta utilizada para criação das requisições:
+
+    foram utilizadas as seguintes chamadas:
+
+    POST => localhost:3333/sessions
+        {
+         "password": "123456",
+         "email": "bianca.xpto@gmail.com"
+         }
+
+
+    POST => localhost:3333/users
+             criar o usuario passando o token
+
+            exemplo:
+            {
+              "login": "bianca",
+              "password": "123456",
+              "name": "Bianca",
+              "email": "bianca.xpto@gmail.com"
+            }
+
+
+    GET => localhost:3333/users
+           Lista todos os usuario cadastrados passando o token
+
+    GET => localhost:3333/users/:id
+           Lista usuario cadastrados por id e passar o token
+
+    PUT => localhost:3333/users/:id
+            Atualiza o usuario já cadastrado e passar o token
+
+
+  ## Estrutura de Pastas
+
+    src
+      @types
+        foi utilzado para inserir o usuario dendo do Resquest.
+      config
+        foi criado o arquivo auth para a configuracao do JWT (secret e expiresIN)
+      database
+        migrations
+          criação da base de dados
+      middlewares
+          foram criado para validar verificar se o token valido.
+      models
+          foram criados a estrutura da Tabela de User
+      repositories
+          foram criados as regras de negocio da aplicacao.
+      routes
+           foram criado as rotas auth e User
+      services
+           foram criado os servicos de authenticação e Usuario
+
+
+      Nota: **Existe diversas formas para criação de uma API, esse foi a maneira que fiz por entender que no dia dia a api precisa ser escalavel.**
